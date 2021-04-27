@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1091564966797",
+    "firebase_url": "https://authapp-1da6a-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "authapp-1da6a",
     "storage_bucket": "authapp-1da6a.appspot.com"
   },

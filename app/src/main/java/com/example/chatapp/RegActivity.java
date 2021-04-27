@@ -26,6 +26,9 @@ public class RegActivity extends AppCompatActivity {
     private EditText password;
     private Button submit;
     private Button toAuth;
+    private EditText usernameInput;
+    private Database database;
+    private String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,13 +38,18 @@ public class RegActivity extends AppCompatActivity {
         password = findViewById(R.id.regPassword);
         submit = findViewById(R.id.submitReg);
         toAuth = findViewById(R.id.toAuth);
+        database = new Database();
+
+        database.connect();
+
+        usernameInput = findViewById(R.id.usernameInput);
         toAuth.setOnClickListener((v)->{
             Intent intent = new Intent(RegActivity.this, AuthActivity.class);
-
             startActivity(intent);
         });
         submit.setOnClickListener((o)->{
             createAccount(email.getText().toString(),password.getText().toString());
+            username = usernameInput.getText().toString();
         });
 
     }
@@ -54,6 +62,7 @@ public class RegActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            database.addUser(username);
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.

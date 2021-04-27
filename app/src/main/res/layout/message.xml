@@ -12,13 +12,13 @@
         android:layout_marginStart="52dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="282dp"
-        app:layout_constraintBottom_toTopOf="@+id/message"
+        app:layout_constraintBottom_toTopOf="@+id/input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/input"
         android:layout_width="339dp"
         android:layout_height="70dp"
         android:layout_marginStart="53dp"
