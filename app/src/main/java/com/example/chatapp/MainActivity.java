@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText input;
     private Button send;
     private String username;
-    private ChatAdapter adapter;
-
+    private static ChatAdapter adapter;
+    public MainActivity(){}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         database = new Database();
 
-        database.connect();
+        database.connect(1);
 
         username = "";
         adapter = new ChatAdapter();
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
 
         recyclerView.setLayoutManager(layoutManager);
+
         if(username.equals("")) {
             new Thread(() -> {
                 while(username.equals("")) {
@@ -83,9 +84,12 @@ public class MainActivity extends AppCompatActivity {
                 input.setText("");
                 adapter.update(database.getMessages());
             }
-
         });
 
+    }
+
+    public static ChatAdapter getAdapter() {
+        return adapter;
     }
 }
 class ChatAdapter extends RecyclerView.Adapter<MessageHolder> {
@@ -115,12 +119,13 @@ class ChatAdapter extends RecyclerView.Adapter<MessageHolder> {
             return 0;
         }
 
-
     }
     public  void update(ArrayList<Message> messages){
+        this.messages.clear();
         this.messages.addAll(messages);
         notifyDataSetChanged();
     }
+
 }
 class MessageHolder extends RecyclerView.ViewHolder{
     private TextView username;

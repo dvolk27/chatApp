@@ -48,7 +48,7 @@
         android:id="@+id/toAuth"
         android:layout_width="108dp"
         android:layout_height="58dp"
-        android:text="auth"
+        android:text="auth?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"

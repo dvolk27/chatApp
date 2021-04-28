@@ -40,7 +40,7 @@ public class RegActivity extends AppCompatActivity {
         toAuth = findViewById(R.id.toAuth);
         database = new Database();
 
-        database.connect();
+        database.connect(0);
 
         usernameInput = findViewById(R.id.usernameInput);
         toAuth.setOnClickListener((v)->{
