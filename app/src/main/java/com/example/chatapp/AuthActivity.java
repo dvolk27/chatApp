@@ -1,11 +1,14 @@
 package com.example.chatapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,18 +30,23 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.authform);
         mAuth = FirebaseAuth.getInstance();
         email = findViewById(R.id.authEmail);
         password = findViewById(R.id.authPassword);
         submit = findViewById(R.id.submitAuth);
         toRegistration = findViewById(R.id.toRegistration);
+
+        password.setHint("password");
+        email.setHint("email");
+
         toRegistration.setOnClickListener((v)->{
             Intent intent = new Intent(AuthActivity.this, RegActivity.class);
             startActivity(intent);
         });
         submit.setOnClickListener((o)->{
-            signin(email.getText().toString(),password.getText().toString());
+            signIn(email.getText().toString(),password.getText().toString());
         });
     }
     @Override
@@ -55,7 +63,11 @@ public class AuthActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-    public void signin(String email,String password) {
+    public void signIn(String email,String password) {
+        if(email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(AuthActivity.this, "you need fill all fields",
+                    Toast.LENGTH_SHORT).show();
+        } else {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -72,6 +84,7 @@ public class AuthActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
-    }
+                    }
                 });
+        }
 } }

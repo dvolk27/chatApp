@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,10 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private Button send;
     private String username;
     private static ChatAdapter adapter;
+    private Thread thread1;
+    private Thread thread2;
     public MainActivity(){}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
         myAuth = FirebaseAuth.getInstance();
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         database.connect(1);
 
+
         username = "";
         adapter = new ChatAdapter();
 
@@ -54,9 +59,23 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
 
         recyclerView.setLayoutManager(layoutManager);
-
+        thread2 = new Thread(() -> {
+            int count = 0;
+            while(true) {
+                if(count!=recyclerView.getAdapter().getItemCount()) {
+                    count = recyclerView.getAdapter().getItemCount();
+                    recyclerView.smoothScrollToPosition(count-1);
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread2.start();
         if(username.equals("")) {
-            new Thread(() -> {
+            thread1 = new Thread(() -> {
                 while(username.equals("")) {
                     try {
                         username = database.getUsername();
@@ -67,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-            }
-            ).start();
+            });
+            thread1.start();
         }
 
         logout.setOnClickListener((o)->{
@@ -91,7 +110,20 @@ public class MainActivity extends AppCompatActivity {
     public static ChatAdapter getAdapter() {
         return adapter;
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        while (thread1.isAlive() && thread2.isAlive()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
+
 class ChatAdapter extends RecyclerView.Adapter<MessageHolder> {
     private ArrayList<Message> messages;
     public ChatAdapter(){
