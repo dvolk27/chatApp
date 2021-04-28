@@ -36,6 +36,7 @@
         android:id="@+id/textView2"
         android:layout_width="110dp"
         android:layout_height="50dp"
+        android:editable="false"
         android:text="authentification"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
